@@ -55,14 +55,33 @@ public class BdProdutosDAO {
     }
 
     public List<ProdutosDTO> listarProdutos() {
+        
+        String query = "select * from produtos where status = 'A venda'";
 
-  
+        try {
+            prep = conn.prepareStatement(query);
 
-        return null;
+            List<ProdutosDTO> listagem = new ArrayList<>();
 
-  
+            ResultSet rs = prep.executeQuery();
+            while (rs.next()) {
+                ProdutosDTO prod = new ProdutosDTO();
+                prod.setId(rs.getInt("id"));
+                prod.setValor(rs.getInt("valor"));
+                prod.setNome(rs.getString("nome"));
+                prod.setStatus(rs.getString("status"));
+                listagem.add(prod);
+            }
+
+            return listagem;
+
+        } catch (SQLException ex) {
+            System.out.println("Erro ao conectar: " + ex.getMessage());
+            return null;
+        }
 
     }
+
 
 }
 

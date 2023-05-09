@@ -16,7 +16,32 @@ public class listagemVIEW extends javax.swing.JFrame {
     
     public void preencheTabela() {
 
-        
+        BdProdutosDAO produtosdao = new BdProdutosDAO();
+
+        boolean status = produtosdao.conectar();
+        if (status == false) {
+            JOptionPane.showMessageDialog(null, "Erro de conexão");
+        } else {
+            List<ProdutosDTO> listagemProdutos = produtosdao.listarProdutos();
+
+            DefaultTableModel tabelaProdutos = (DefaultTableModel) listaProdutos.getModel();
+            listaProdutos.setRowSorter(new TableRowSorter(tabelaProdutos));
+            tabelaProdutos.setNumRows(0);
+
+            //Percorrer o listagemProdutos inserir na tabelaProdutos
+            for (ProdutosDTO p : listagemProdutos) { 
+                Object[] obj = new Object[]{
+                    p.getId(), //id
+                    p.getNome(), //nome
+                    p.getValor(), //Valor
+                    p.getStatus()
+                };
+                //colocar os dados da variavel obj dentro da tabela
+                tabelaProdutos.addRow(obj);
+            }
+
+            produtosdao.desconectar();
+        }
 
     }
 
